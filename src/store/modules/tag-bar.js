@@ -24,7 +24,7 @@ export default {
         if (state.tagBars.length > 0) {
           router.push({path: state.tagBars[0].path})
         } else {
-          router.push({path: '/404'})
+          router.push({path: '/index'})
         }
       }
     }
