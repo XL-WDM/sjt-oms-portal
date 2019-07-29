@@ -22,9 +22,9 @@ export default {
       // 删除的标签为选中标签时, 重新定位标签
       if (path === router.history.current.path) {
         if (state.tagBars.length > 0) {
-          router.push({path: state.tagBars[0].path})
+          router.push({ path: state.tagBars[0].path })
         } else {
-          router.push({path: '/index'})
+          router.push({ path: '/index' })
         }
       }
     }

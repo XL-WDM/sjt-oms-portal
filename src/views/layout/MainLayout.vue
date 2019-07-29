@@ -2,7 +2,6 @@
   <div class="layout">
     <Layout>
       <Header :style="{padding: 0}" class="layout-header-bar">
-        <!--<Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>-->
         <Row>
           <Col span="22">
             <h1 class="log-name">后台管理平台</h1>
@@ -51,21 +50,19 @@ export default {
       return [
         'menu-icon',
         this.isCollapsed ? 'rotate-icon' : ''
-      ];
+      ]
     },
     menuitemClasses () {
       return [
         'menu-item',
         this.isCollapsed ? 'collapsed-menu' : ''
       ]
-    }
-  },
-  computed: {
+    },
     ...mapGetters(['tagBars'])
   },
   methods: {
     collapsedSider () {
-      this.$refs.side1.toggleCollapse();
+      this.$refs.side1.toggleCollapse()
     },
     closeTag (path) {
       this.removeTagBars(path)
@@ -77,7 +74,7 @@ export default {
   },
   watch: {
     $route (to, fromRoute) {
-      this.pushTagBars({path: to.path, name: to.meta.title})
+      this.pushTagBars({ path: to.path, name: to.meta.title })
     }
   }
 }

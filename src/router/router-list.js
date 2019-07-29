@@ -1,4 +1,4 @@
-import _import from "./_import";
+import _import from './_import'
 
 const homePage = {
   path: '/',

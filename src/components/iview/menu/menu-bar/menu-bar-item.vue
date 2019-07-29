@@ -38,14 +38,14 @@
 import MenuBarItem from './menu-bar-item.vue'
 
 export default {
-  name: "MenuBarItem",
+  name: 'MenuBarItem',
   components: {
     MenuBarItem
   },
   props: {
     item: {
       type: Object,
-      default: {},
+      default: { },
       required: true
     },
     rootPath: {
