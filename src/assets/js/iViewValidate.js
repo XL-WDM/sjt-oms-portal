@@ -9,7 +9,7 @@ const validata = {
   },
   // 手机号
   phone: (rule, value, callback) => {
-    var myreg=/^[1][34578][0-9]{9}$/;
+    var myreg = /^[1][34578][0-9]{9}$/
     if (value && !myreg.test(value)) {
       callback(new Error('手机号码格式不正确'))
     } else {

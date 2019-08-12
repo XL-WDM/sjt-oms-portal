@@ -1,5 +1,5 @@
 import { get } from '@/utils/ajax.js'
 
-export function getOrders() {
-  return get('/order/list/page', {})
+export function getOrders (query) {
+  return get('/order/manage/query', { ...query })
 }

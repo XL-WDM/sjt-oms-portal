@@ -1,5 +1,5 @@
 const util = {
-  isExist: (list, method = () => {}) => {
+  isExist (list, method = () => {}) {
     for (var idx in list) {
       if (method(list[idx], idx)) {
         return true
@@ -7,14 +7,14 @@ const util = {
     }
     return false
   },
-  map: (list, method = () => {}) => {
+  map (list, method = () => {}) {
     const map = []
     for (var idx in list) {
       map.push(method(list[idx], idx))
     }
     return map
   },
-  filter: (list, method = () => {}) => {
+  filter (list, method = () => {}) {
     const map = []
     for (var idx in list) {
       if (method(list[idx], idx)) {
