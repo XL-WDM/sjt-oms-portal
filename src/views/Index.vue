@@ -1,12 +1,22 @@
 <template>
   <div>
-    Index
+    <div>{{product.detail}}</div>
+    <quill-editor ref="productEditor"
+                  v-model="product.detail">
+    </quill-editor>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Index'
+  name: 'Index',
+  data () {
+    return {
+      product: {
+        detail: undefined
+      }
+    }
+  }
 }
 </script>
 

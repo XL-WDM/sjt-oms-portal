@@ -17,12 +17,15 @@
         </Sider>
         <Content class="layout-content">
           <div class="view-lable">
-            <Tag closable
-                 :color="$route.path === itm.path ? 'success' : 'default'"
-                 v-for="(itm, index) in tagBars" :key="index"
-                 @on-close="closeTag(itm.path)">
-              {{itm.name}}
-            </Tag>
+            <div v-for="(itm, index) in tagBars"
+                 :key="index"
+                 :class="['ivu-tag', 'ivu-tag-' + ($route.path === itm.path ? 'success' : 'default'), 'ivu-tag-closable', 'ivu-tag-checked']">
+              <span :class="['ivu-tag-text', $route.path === itm.path ? 'ivu-tag-color-white' : '']"
+                    @click="linkTag(itm.path)">
+                {{itm.name}}
+              </span>
+              <i class="ivu-icon ivu-icon-ios-close" @click="closeTag(itm.path)"></i>
+            </div>
           </div>
           <div class="view-content">
             <router-view/>
@@ -35,6 +38,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import router from '@/router'
 
 export default {
   created () {
@@ -65,7 +69,11 @@ export default {
       this.$refs.side1.toggleCollapse()
     },
     closeTag (path) {
+      console.log(path)
       this.removeTagBars(path)
+    },
+    linkTag (path) {
+      router.push({ path })
     },
     ...mapActions({
       pushTagBars: 'pushTagBars',
@@ -89,7 +97,7 @@ export default {
   overflow: hidden;
 }
 .layout-header-bar{
-  background: #fff;
+  background: #363e4f;
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 .layout-logo-left{
@@ -139,7 +147,8 @@ export default {
   float: right;
 }
 .view-lable {
-  margin: 2px 5px 0px 5px;
+  box-shadow: 0px 1px 3px #ccc;
+  margin: 2px 0px 0px 0px;
   padding: 5px;
   background: #FFFFFF;
   min-height: 30px;
