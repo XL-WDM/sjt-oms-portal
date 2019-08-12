@@ -8,10 +8,18 @@ Vue.use(Router)
 const baseRoutes = [
   {
     path: '/404',
-    name: 'Error404',
+    name: Math.random(),
     component: _import('error/404'),
     meta: {
       title: 'error404'
+    }
+  },
+  {
+    path: '/sign',
+    name: Math.random(),
+    component: _import('Login'),
+    meta: {
+      title: '登陆'
     }
   }
 ]

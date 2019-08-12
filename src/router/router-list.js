@@ -21,62 +21,23 @@ const homePage = {
 }
 
 const routeList = [
-  homePage,
+  // homePage,
   {
-    path: '/product',
-    redirect: '/product/product-list',
+    path: '/order',
+    redirect: '/order/logistics-manage',
     name: Math.random(),
     component: _import('layout/MainLayout'),
     meta: {
-      title: '商品管理',
+      title: '订单管理',
       icon: 'ios-apps'
     },
     children: [
       {
-        path: 'product-list',
+        path: 'logistics-manage',
         name: Math.random(),
-        component: _import('product/ProductList'),
+        component: _import('order-manage/LogisticsManage'),
         meta: {
-          title: '商品列表',
-          icon: 'ios-apps'
-        }
-      },
-      {
-        path: 'add-product',
-        name: Math.random(),
-        component: _import('Login'),
-        meta: {
-          title: '新增商品',
-          icon: 'ios-apps'
-        }
-      }
-    ]
-  },
-  {
-    path: '/product1',
-    redirect: '/product1/product-list',
-    name: Math.random(),
-    component: _import('layout/MainLayout'),
-    meta: {
-      title: '商品管理',
-      icon: 'ios-apps'
-    },
-    children: [
-      {
-        path: 'product-list',
-        name: Math.random(),
-        component: _import('product/ProductList'),
-        meta: {
-          title: '商品列表',
-          icon: 'ios-apps'
-        }
-      },
-      {
-        path: 'add-product',
-        name: Math.random(),
-        component: _import('Login'),
-        meta: {
-          title: '新增商品',
+          title: '订单管理',
           icon: 'ios-apps'
         }
       }

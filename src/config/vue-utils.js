@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import utils from '@/utils'
+import util from '@/utils'
 
 Vue.prototype.u = {
-  ...utils,
+  ...util,
   /* /+ -> / */
   slashToSingle: (value) => {
     return value.replace(new RegExp('/+'), '/')

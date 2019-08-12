@@ -1,20 +1,20 @@
 <template>
   <div class="layout">
     <Layout>
-      <Header :style="{padding: 0}" class="layout-header-bar">
-        <Row>
-          <Col span="22">
-            <h1 class="log-name">后台管理平台</h1>
-          </Col>
-          <Col span="2">
-            <Avatar class="user-head" src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
-          </Col>
-        </Row>
-      </Header>
+      <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+        <MenuBar :is-collapsed="isCollapsed"></MenuBar>
+      </Sider>
       <Layout>
-        <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
-          <MenuBar :is-collapsed="isCollapsed"></MenuBar>
-        </Sider>
+        <Header :style="{padding: 0}" class="layout-header-bar">
+          <Row>
+            <Col span="22">
+              <h1 class="log-name">后台管理平台</h1>
+            </Col>
+            <Col span="2">
+              <Avatar class="user-head" src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+            </Col>
+          </Row>
+        </Header>
         <Content class="layout-content">
           <div class="view-lable">
             <div v-for="(itm, index) in tagBars"
@@ -96,24 +96,16 @@ export default {
   border-radius: 4px;
   overflow: hidden;
 }
-.layout-header-bar{
-  background: #363e4f;
-  box-shadow: 0 1px 1px rgba(0,0,0,.1);
+.layout-header-bar {
+  background-color: rgb(255, 255, 255);
 }
-.layout-logo-left{
-  width: 90%;
-  height: 30px;
-  background: #5b6270;
-  border-radius: 3px;
-  margin: 15px auto;
-}
-.menu-icon{
+.menu-icon {
   transition: all .3s;
 }
-.rotate-icon{
+.rotate-icon {
   transform: rotate(-90deg);
 }
-.menu-item span{
+.menu-item span {
   display: inline-block;
   overflow: hidden;
   width: 69px;
@@ -122,7 +114,7 @@ export default {
   vertical-align: bottom;
   transition: width .2s ease .2s;
 }
-.menu-item i{
+.menu-item i {
   transform: translateX(0px);
   transition: font-size .2s ease, transform .2s ease;
   vertical-align: middle;

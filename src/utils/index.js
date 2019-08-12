@@ -1,4 +1,4 @@
-const utils = {
+const util = {
   isExist: (list, method = () => {}) => {
     for (var idx in list) {
       if (method(list[idx], idx)) {
@@ -25,4 +25,4 @@ const utils = {
   }
 }
 
-export default utils
+export default util
