@@ -36,7 +36,7 @@ const baseRoutes = [
 const routes = baseRoutes.concat(routeList)
 
 const router = new Router({
-  mode: process.env.ENV === 'production' ? 'hash' : 'history',
+  // mode: process.env.ENV === 'production' ? 'hash' : 'history',
   routes
 })
 
