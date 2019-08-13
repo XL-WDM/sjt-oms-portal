@@ -62,17 +62,12 @@
             width="500"
             @on-visible-change="drawerChange"
             v-model="drawerFlag">
-      <div v-show="addressInfo.id" class="mgb20">
+      <div class="mgb20">
         <div class="border-bottom mgt20">收货地址</div>
         <div class="item-content">
-          <Row class="mgb5"><Col span="11">联系人</Col><Col span="13">{{addressInfo.contacts}}</Col></Row>
-          <Row class="mgb5"><Col span="11">联系电话</Col><Col span="13">{{addressInfo.phone}}</Col></Row>
-          <Row>
-            <Col span="11">联系地址</Col>
-            <Col span="13">
-              {{nullToEmpty(addressInfo.province) + nullToEmpty(addressInfo.city) + nullToEmpty(addressInfo.county) + nullToEmpty(addressInfo.address) + nullToEmpty(addressInfo.doorNumber)}}
-            </Col>
-          </Row>
+          <Row class="mgb5"><Col span="11">联系人</Col><Col span="13" class="text-right">{{orderDetail.contactName || '无'}}</Col></Row>
+          <Row class="mgb5"><Col span="11">联系电话</Col><Col span="13" class="text-right">{{orderDetail.contactPhone || '无'}}</Col></Row>
+          <Row><Col span="11">联系地址</Col><Col span="13" class="text-right">{{orderDetail.address || '无'}}</Col></Row>
         </div>
       </div>
       <div>
@@ -95,7 +90,7 @@
                   <div style="margin-top: 15px"><H4>{{item.productName}}</H4></div>
                   <div><span style="font-size: 12px; color: #ccc;">{{item.productDescript}}</span></div>
                 </Col>
-                <Col span="3" style="text-align: right; padding-right:10px">
+                <Col span="3" class="text-right" style="padding-right:10px">
                   <div style="margin-top: 15px">{{item.price}}元</div>
                   <div>×{{item.num}}</div>
                 </Col>
@@ -104,8 +99,8 @@
             <div class="border-bottom"></div>
           </div>
           <div class="border-bottom mgb5 mgt20">订单基本信息</div>
-          <Row class="mgb5"><Col span="11">订单号</Col><Col span="13" style="text-align: right">{{orderDetail.orderNo}}</Col></Row>
-          <Row class="mgb5"><Col span="11">订单总价</Col><Col span="13" style="text-align: right">{{orderDetail.orgAmount}}元</Col></Row>
+          <Row class="mgb5"><Col span="11">订单号</Col><Col span="13" class="text-right">{{orderDetail.orderNo}}</Col></Row>
+          <Row class="mgb5"><Col span="11">订单总价</Col><Col span="13" class="text-right">{{orderDetail.orgAmount}}元</Col></Row>
         </div>
       </div>
     </Drawer>
@@ -156,7 +151,6 @@ export default {
         shippingCode: undefined
       },
       orders: [],
-      addressInfo: {},
       orderDetail: {},
       tabColumns: [
         { title: '序号', type: 'index', align: 'center', width: 60 },
@@ -221,7 +215,6 @@ export default {
     },
     drawerChange (openFlag) {
       if (!openFlag) {
-        this.addressInfo = {}
         this.orderDetail = {}
       }
     },
@@ -230,7 +223,6 @@ export default {
       orderDetail(orderId).then(response => {
         response.success(data => {
           this.orderDetail = data.data
-          this.addressInfo = { ...data.data.address }
         })
       })
     },
@@ -270,9 +262,6 @@ export default {
     pageSizeChange (pageSize) {
       this.page.pageSize = pageSize
       this.getOrders()
-    },
-    nullToEmpty (value) {
-      return value || ''
     }
   }
 }
