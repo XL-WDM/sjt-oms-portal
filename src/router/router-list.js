@@ -1,13 +1,13 @@
 import _import from './_import'
 
+/*
 const homePage = {
   path: '/',
-  redirect: '/order/logistics-manage',
+  redirect: '/index',
   name: 'index',
   component: _import('layout/MainLayout'),
   meta: {},
   children: [
-    /*
     {
       path: 'index',
       name: Math.random(),
@@ -17,12 +17,12 @@ const homePage = {
         icon: 'ios-apps'
       }
     }
-    */
   ]
 }
+*/
 
 const routeList = [
-  homePage,
+  // homePage,
   {
     path: '/order',
     redirect: '/order/logistics-manage',

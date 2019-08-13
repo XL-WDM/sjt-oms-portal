@@ -1,10 +1,12 @@
 const validata = {
   // 为空判断
-  empty: (rule, value, callback) => {
-    if (!value) {
-      callback(new Error('不能为空'))
-    } else {
-      callback()
+  empty: message => {
+    return (rule, value, callback) => {
+      if (!value) {
+        callback(new Error(message))
+      } else {
+        callback()
+      }
     }
   },
   // 手机号
@@ -16,12 +18,14 @@ const validata = {
       callback()
     }
   },
-  // 密码长度6 - 18
-  password6_18: (rule, value, callback) => {
-    if (value && (value.length < 6 || value.length > 18)) {
-      callback(new Error('密码长度必须在6 - 18位之间'))
-    } else {
-      callback()
+  // 长度min - max
+  lengthCheck: (min, max) => {
+    return (rule, value, callback) => {
+      if (value && (value.length < min || value.length > max)) {
+        callback(new Error('长度必须在' + min + ' - ' + max + '位之间'))
+      } else {
+        callback()
+      }
     }
   }
 }

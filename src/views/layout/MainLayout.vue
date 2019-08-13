@@ -11,7 +11,12 @@
               <h1 class="log-name">后台管理平台</h1>
             </Col>
             <Col span="2">
-              <Avatar class="user-head" src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+              <Poptip
+                confirm
+                title="退出登录"
+                @on-ok="signOut">
+                <Avatar class="user-head" src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+              </Poptip>
             </Col>
           </Row>
         </Header>
@@ -74,6 +79,9 @@ export default {
     },
     linkTag (path) {
       router.push({ path })
+    },
+    signOut () {
+      router.push({ path: '/sign' })
     },
     ...mapActions({
       pushTagBars: 'pushTagBars',

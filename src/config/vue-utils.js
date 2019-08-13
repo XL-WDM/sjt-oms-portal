@@ -9,6 +9,10 @@ Vue.prototype.u = {
   },
   /* 格式化日期 */
   formatDate (dateStr) {
+    if (!dateStr) {
+      return '-'
+    }
+
     try {
       const date = new Date(dateStr)
       return date.getFullYear() + '-' + repairZero(date.getMonth() + 1) + '-' + repairZero(date.getDate()) +

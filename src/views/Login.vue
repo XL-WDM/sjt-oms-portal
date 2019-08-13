@@ -38,6 +38,11 @@ import { sign } from '@/api/sign'
 
 export default {
   name: 'Login',
+  created () {
+    if (this.$cookies.isKey('SESSION')) {
+      this.$cookies.remove('SESSION')
+    }
+  },
   data () {
     return {
       iosEye: false,
@@ -47,8 +52,8 @@ export default {
       },
       signLoading: false,
       signRules: {
-        username: [{ validator: v.empty, trigger: 'blur' }],
-        password: [{ validator: v.empty, trigger: 'blur' }]
+        username: [{ validator: v.empty('用户名不能为空'), trigger: 'blur' }],
+        password: [{ validator: v.empty('密码不能为空'), trigger: 'blur' }]
       }
     }
   },
@@ -59,11 +64,7 @@ export default {
           return
         }
         this.signLoading = true
-        sign({
-          username: 'test',
-          password: '123456'
-        }).then(response => {
-          console.log(response)
+        sign({ ...this.sign }).then(response => {
           response.success(data => {
             if (data) {
               this.$router.push({ path: this.$route.query.to || '/order/logistics-manage' })

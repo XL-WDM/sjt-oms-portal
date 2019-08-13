@@ -3,8 +3,6 @@ import axios from 'axios'
 import iView from 'iview'
 import router from '@/router'
 
-console.log(process.env.VUE_APP_URL)
-
 const service = axios.create({
   baseURL: process.env.VUE_APP_URL,
   withCredentials: true,
