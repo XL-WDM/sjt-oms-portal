@@ -36,7 +36,7 @@
         {{row.payment}}元
       </template>
       <template slot-scope="{row}" slot="status">
-        {{orderStatusMap(row.status)}}
+        <Tag :color="orderStatusMap(row.status).code">{{orderStatusMap(row.status).name}}</Tag>
       </template>
       <template slot-scope="{row}" slot="consignDate">
         {{u.formatDate(row.consignDate)}}
@@ -46,7 +46,7 @@
       </template>
       <template slot-scope="{row}" slot="handle">
         <Button v-show="row.status === '2'" type="info" @click="openEditLogisticsModal(row)">编辑物流</Button>
-        <Button class="mgl5">详情</Button>
+        <Button class="mgl5" @click="openDrawer(row.id)">详情</Button>
       </template>
     </Table>
     <div class="text-center page ">
@@ -58,6 +58,57 @@
             @on-page-size-change="pageSizeChange"
             :page-size="page.pageSize"/>
     </div>
+    <Drawer title="订单详情"
+            width="500"
+            @on-visible-change="drawerChange"
+            v-model="drawerFlag">
+      <div v-show="addressInfo.id" class="mgb20">
+        <div class="border-bottom mgt20">收货地址</div>
+        <div class="item-content">
+          <Row class="mgb5"><Col span="11">联系人</Col><Col span="13">{{addressInfo.contacts}}</Col></Row>
+          <Row class="mgb5"><Col span="11">联系电话</Col><Col span="13">{{addressInfo.phone}}</Col></Row>
+          <Row>
+            <Col span="11">联系地址</Col>
+            <Col span="13">
+              {{nullToEmpty(addressInfo.province) + nullToEmpty(addressInfo.city) + nullToEmpty(addressInfo.county) + nullToEmpty(addressInfo.address) + nullToEmpty(addressInfo.doorNumber)}}
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <div>
+        <div class="border-bottom mgt5">订单信息</div>
+        <div class="item-content">
+          <div class="border-bottom mgb5">订单详情</div>
+          <div v-for="(item, index) in orderDetail.orderItems"
+               :key="index">
+            <div style="background-color: #ffffff;">
+              <Row>
+                <Col span="3">
+                  <Card class="order-item"
+                        :padding="0"
+                        dis-hover
+                        :bordered="false">
+                    <img class="order-item-img" :src="item.productImg">
+                  </Card>
+                </Col>
+                <Col span="18" style="padding-left: 10px">
+                  <div style="margin-top: 15px"><H4>{{item.productName}}</H4></div>
+                  <div><span style="font-size: 12px; color: #ccc;">{{item.productDescript}}</span></div>
+                </Col>
+                <Col span="3" style="text-align: right; padding-right:10px">
+                  <div style="margin-top: 15px">{{item.price}}元</div>
+                  <div>×{{item.num}}</div>
+                </Col>
+              </Row>
+            </div>
+            <div class="border-bottom"></div>
+          </div>
+          <div class="border-bottom mgb5 mgt20">订单基本信息</div>
+          <Row class="mgb5"><Col span="11">订单号</Col><Col span="13" style="text-align: right">{{orderDetail.orderNo}}</Col></Row>
+          <Row class="mgb5"><Col span="11">订单总价</Col><Col span="13" style="text-align: right">{{orderDetail.orgAmount}}元</Col></Row>
+        </div>
+      </div>
+    </Drawer>
     <Modal v-model="modalFlag"
            @on-visible-change="modalChange"
            title="编辑物流单号">
@@ -81,7 +132,7 @@
 
 <script>
 import v from '@/assets/js/iViewValidate'
-import { getOrders, logisticsImport } from '@/api/order-manage'
+import { getOrders, logisticsImport, orderDetail } from '@/api/order-manage'
 
 export default {
   name: 'LogisticsManage',
@@ -91,24 +142,27 @@ export default {
   data () {
     return {
       modalFlag: false,
+      drawerFlag: false,
       page: {
         pageNo: 1,
         pageSize: 10,
         total: 0
       },
       query: {
-        status: '2'
+        status: ''
       },
       orderItem: {
         orderId: undefined,
         shippingCode: undefined
       },
       orders: [],
+      addressInfo: {},
+      orderDetail: {},
       tabColumns: [
         { title: '序号', type: 'index', align: 'center', width: 60 },
         { title: '订单号', key: 'orderNo', align: 'center' },
-        { title: '物流单号', slot: 'shippingCode', align: 'center', width: 140},
-        { title: '支付金额', slot: 'payment', align: 'center', width: 90},
+        { title: '物流单号', slot: 'shippingCode', align: 'center', width: 140 },
+        { title: '支付金额', slot: 'payment', align: 'center', width: 90 },
         { title: '订单状态', slot: 'status', align: 'center', width: 100 },
         { title: '发货时间', slot: 'consignDate', align: 'center', width: 150 },
         { title: '支付时间', slot: 'paymentDate', align: 'center', width: 150 },
@@ -165,23 +219,48 @@ export default {
         this.orderItem.orderId = undefined
       }
     },
+    drawerChange (openFlag) {
+      if (!openFlag) {
+        this.addressInfo = {}
+        this.orderDetail = {}
+      }
+    },
+    openDrawer (orderId) {
+      this.drawerFlag = true
+      orderDetail(orderId).then(response => {
+        response.success(data => {
+          this.orderDetail = data.data
+          this.addressInfo = { ...data.data.address }
+        })
+      })
+    },
     orderStatusMap (status) {
       switch (status) {
         case '1' :
-          return '待支付'
-          break
+          return {
+            code: 'default',
+            name: '待支付'
+          }
         case '2' :
-          return '待发货'
-          break
+          return {
+            code: 'primary',
+            name: '待发货'
+          }
         case '3' :
-          return '待收货'
-          break
+          return {
+            code: 'green',
+            name: '待收货'
+          }
         case '4' :
-          return '已完成'
-          break
+          return {
+            code: 'success',
+            name: '已完成'
+          }
         case '5' :
-          return '已取消/失效'
-          break
+          return {
+            code: 'error',
+            name: '已失效'
+          }
       }
     },
     pageNoChange (pageNo) {
@@ -191,11 +270,24 @@ export default {
     pageSizeChange (pageSize) {
       this.page.pageSize = pageSize
       this.getOrders()
+    },
+    nullToEmpty (value) {
+      return value || ''
     }
   }
 }
 </script>
 
 <style scoped>
-
+.item-content {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+.order-item {
+  height: 60px;
+  padding: 5px;
+}
+.order-item-img {
+  height: 50px;
+}
 </style>
