@@ -45,7 +45,7 @@
         {{u.formatDate(row.paymentDate)}}
       </template>
       <template slot-scope="{row}" slot="handle">
-        <Button v-show="row.status === '2'" type="info" @click="openEditLogisticsModal(row)">编辑物流</Button>
+        <Button v-show="row.status === '2' || row.status === '3'" type="info" @click="openEditLogisticsModal(row)">编辑物流</Button>
         <Button class="mgl5" @click="openDrawer(row.id)">详情</Button>
       </template>
     </Table>
@@ -62,7 +62,7 @@
             width="500"
             @on-visible-change="drawerChange"
             v-model="drawerFlag">
-      <div class="mgb20">
+      <div>
         <div class="border-bottom mgt20">收货地址</div>
         <div class="item-content">
           <Row class="mgb5"><Col span="11">联系人</Col><Col span="13" class="text-right">{{orderDetail.contactName || '无'}}</Col></Row>
@@ -70,7 +70,7 @@
           <Row><Col span="11">联系地址</Col><Col span="13" class="text-right">{{orderDetail.address || '无'}}</Col></Row>
         </div>
       </div>
-      <div>
+      <div class="mgt20">
         <div class="border-bottom mgt5">订单信息</div>
         <div class="item-content">
           <div class="border-bottom mgb5">订单详情</div>
@@ -101,6 +101,23 @@
           <div class="border-bottom mgb5 mgt20">订单基本信息</div>
           <Row class="mgb5"><Col span="11">订单号</Col><Col span="13" class="text-right">{{orderDetail.orderNo}}</Col></Row>
           <Row class="mgb5"><Col span="11">订单总价</Col><Col span="13" class="text-right">{{orderDetail.orgAmount}}元</Col></Row>
+        </div>
+      </div>
+      <div class="mgt20" style="margin-bottom: 100px">
+        <div class="border-bottom">物流信息</div>
+        <div class="item-content">
+          <Row class="mgb5"><Col span="11">物流单号</Col><Col span="13" class="text-right">{{orderDetail.shippingCode}}</Col></Row>
+        </div>
+        <div>
+          <Collapse simple>
+            <Panel name="1">
+              物流查询
+              <div slot="content">
+                <div>未完成</div>
+                <div>未完成</div>
+              </div>
+            </Panel>
+          </Collapse>
         </div>
       </div>
     </Drawer>
