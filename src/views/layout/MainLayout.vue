@@ -84,14 +84,8 @@ export default {
       router.push({ path: '/sign' })
     },
     ...mapActions({
-      pushTagBars: 'pushTagBars',
       removeTagBars: 'removeTagBars'
     })
-  },
-  watch: {
-    $route (to, fromRoute) {
-      this.pushTagBars({ path: to.path, name: to.meta.title })
-    }
   }
 }
 </script>
