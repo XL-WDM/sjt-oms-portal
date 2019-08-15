@@ -103,18 +103,25 @@
           <Row class="mgb5"><Col span="11">订单总价</Col><Col span="13" class="text-right">{{orderDetail.orgAmount}}元</Col></Row>
         </div>
       </div>
-      <div class="mgt20" style="margin-bottom: 100px">
+      <div class="mgt20" style="margin-bottom: 100px" v-show="orderDetail.status === '3' || orderDetail.status === '4'">
         <div class="border-bottom">物流信息</div>
         <div class="item-content">
           <Row class="mgb5"><Col span="11">物流单号</Col><Col span="13" class="text-right">{{orderDetail.shippingCode}}</Col></Row>
         </div>
         <div>
-          <Collapse simple>
-            <Panel name="1">
+          <Collapse simple @on-change="queryLogistics" v-model="orderDetail.collapse">
+            <Panel :name="orderDetail.orderNo">
               物流查询
               <div slot="content">
-                <div>未完成</div>
-                <div>未完成</div>
+                <div v-show="getLogisticsCache(orderDetail.orderNo) && getLogisticsCache(orderDetail.orderNo).length === 0">暂无物流信息</div>
+                <Timeline v-show="getLogisticsCache(orderDetail.orderNo) && getLogisticsCache(orderDetail.orderNo).length !== 0">
+                  <TimelineItem v-for="(item, index) in getLogisticsCache(orderDetail.orderNo)"
+                                :key="index"
+                                :color="index === 0 ? 'green' : 'blue'">
+                    <p class="time">{{item.acceptTime}}</p>
+                    <p class="content">{{item.remark}}</p>
+                  </TimelineItem>
+                </Timeline>
               </div>
             </Panel>
           </Collapse>
@@ -144,7 +151,7 @@
 
 <script>
 import v from '@/assets/js/iViewValidate'
-import { getOrders, logisticsImport, orderDetail } from '@/api/order-manage'
+import { getOrders, logisticsImport, orderDetail, queryLogistics } from '@/api/order-manage'
 
 export default {
   name: 'LogisticsManage',
@@ -161,7 +168,8 @@ export default {
         total: 0
       },
       query: {
-        status: ''
+        status: '',
+        orderNo: '6560484520200646656'
       },
       orderItem: {
         orderId: undefined,
@@ -169,6 +177,7 @@ export default {
       },
       orders: [],
       orderDetail: {},
+      logisticsCache: {},
       tabColumns: [
         { title: '序号', type: 'index', align: 'center', width: 60 },
         { title: '订单号', key: 'orderNo', align: 'center' },
@@ -188,6 +197,7 @@ export default {
     }
   },
   methods: {
+    // 事件搜索框改变通知
     changeDate (date) {
       this.query.startDate = date[0]
       this.query.endDate = date[1]
@@ -224,17 +234,20 @@ export default {
         })
       })
     },
+    // 物流单编辑框闭合事件通知
     modalChange (openFlag) {
       if (!openFlag) {
         this.orderItem.shippingCode = undefined
         this.orderItem.orderId = undefined
       }
     },
+    // 抽屉闭合事件通知
     drawerChange (openFlag) {
       if (!openFlag) {
         this.orderDetail = {}
       }
     },
+    // 打开抽屉并查询订单详情
     openDrawer (orderId) {
       this.drawerFlag = true
       orderDetail(orderId).then(response => {
@@ -242,6 +255,34 @@ export default {
           this.orderDetail = data.data
         })
       })
+    },
+    // 物流查询
+    queryLogistics (names) {
+      console.log(names)
+      if (!names || names.length === 0) {
+        return
+      }
+      for (var idx in names) {
+        const orderNo = names[idx]
+        if (this.orderDetail.orderNo === orderNo) {
+          if (!this.logisticsCache[orderNo]) {
+            queryLogistics(this.orderDetail.orderNo).then(response => {
+              response.success(data => {
+                this.logisticsCache[orderNo] = data.data
+                this.orderDetail.collapse = undefined
+                this.orderDetail.collapse = orderNo
+              }).error(() => {
+                this.orderDetail.collapse = undefined
+              })
+            })
+            return
+          }
+        }
+      }
+    },
+    // 获取物流缓存
+    getLogisticsCache (orderNo) {
+      return this.logisticsCache[orderNo]
     },
     orderStatusMap (status) {
       switch (status) {
