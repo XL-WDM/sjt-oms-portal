@@ -168,8 +168,7 @@ export default {
         total: 0
       },
       query: {
-        status: '',
-        orderNo: '6560484520200646656'
+        status: ''
       },
       orderItem: {
         orderId: undefined,
