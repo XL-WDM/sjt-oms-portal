@@ -146,6 +146,9 @@
         <Button type="primary" @click="eidtOrder">确认</Button>
       </template>
     </Modal>
+    <audio ref="notice" preload="auto">
+      <source :src="apiUrl + '/mp3/order_pay_notify.mp3'" type="audio/ogg" />
+    </audio>
   </div>
 </template>
 
@@ -157,6 +160,7 @@ export default {
   name: 'LogisticsManage',
   created () {
     this.getOrders()
+    this.startWebSocket()
   },
   data () {
     return {
@@ -310,6 +314,65 @@ export default {
             code: 'error',
             name: '已失效'
           }
+      }
+    },
+    startWebSocket () {
+      var websocket = null
+      if ('WebSocket' in window) {
+        websocket = new WebSocket(this.webSocketUrl + '/order-pay/notify/websocket')
+
+        // 创建连接
+        websocket.onopen = (event) => {
+          console.log('建立连接')
+        }
+
+        // 断开连接
+        websocket.onclose = (event) => {
+          console.log('连接关闭')
+        }
+
+        // 接受消息
+        websocket.onmessage = (event) => {
+          this.$refs.notice.play()
+          this.$Modal.confirm({
+            title: '提醒',
+            content: '您有新的订单, 请及时处理!',
+            okText: '查看订单',
+            cancelText: '取消',
+            onOk: () => {
+              const orderNo = event.data
+              getOrders({ orderNo, ...this.page }).then(response => {
+                response.success(data => {
+                  this.orders = data.page.rows
+                  this.page.total = data.page.total
+                })
+              })
+            }
+          })
+        }
+
+        // 连接出错事件
+        websocket.onerror = (event) => {
+          this.$Message.error('websocket通讯发生错误! 无法接收新订单通知')
+        }
+
+        // 定时心跳检测
+        const wsTime = window.setInterval(() => {
+          websocket.send(JSON.stringify({
+            pingText: '心跳检测'
+          }))
+        }, 30000)
+
+        // 页面关闭时断开连接
+        window.onbeforeunload = () => {
+          window.setInvalid(wsTime)
+          websocket.close()
+        }
+      } else {
+        this.$Message.warning({
+          content: '您的浏览器不支持新订单通知',
+          duration: 10
+        })
       }
     },
     pageNoChange (pageNo) {
